@@ -27,27 +27,16 @@ function getRandomFloat(min, max, dec) {
 
 getRandomFloat();
 
-function getData(numberOfRows = 10) {
-  result = []
-
-  for (i = 0; i < numberOfRows; i++) {
-    result.push(generateRecord())
-
-  }
-
-  return result
-}
-
-let c = 0;
+let authorCounter = 0;
 function getAuthor() {
-  let numberExpression = c < 10
-    ? '0' + c
-    : c;
+  const numberExpression = authorCounter < 10
+    ? `0${String(authorCounter)}`
+    : authorCounter;
 
-  c++;
+  authorCounter++;
   return {
-    avatar: 'img/avatars/user' + numberExpression + '.png'
-  }
+    avatar: `img/avatars/user${numberExpression}.png`,
+  };
 
 }
 
@@ -65,14 +54,16 @@ function getFeatures() {
   const feature = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   const random = getRandomInt(1, feature.length);
   return feature.slice(0, random);
-};
+}
 
 function getPhotos() {
-  const photo = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
+  const photo = [
+    'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
     'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
-    'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
-    const random = getRandomInt(1, photo.length);
-    return photo.slice(0,random);
+    'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
+  ];
+  const random = getRandomInt(1, photo.length);
+  return photo.slice(0,random);
 }
 
 function generateRecord() {
@@ -94,6 +85,18 @@ function generateRecord() {
     location: {
       lat: getRandomFloat(35.65000, 35.70000, 5),
       lng: getRandomFloat(139.70000, 139.80000, 5),
-    }
+    },
+  };
+}
+
+// eslint-disable-next-line no-unused-vars
+function getData(numberOfRows = 10) {
+  const result = [];
+
+  for (let iter = 0; iter < numberOfRows; iter++) {
+    result.push(generateRecord());
+
   }
+
+  return result;
 }
