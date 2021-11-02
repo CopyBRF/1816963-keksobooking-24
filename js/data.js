@@ -1,6 +1,6 @@
 import {getRandomInt} from './util.js';
 
-let authorCounter = 0;
+let authorCounter = 1;
 function getAuthor() {
   const numberExpression = authorCounter < 10
     ? `0${String(authorCounter)}`
