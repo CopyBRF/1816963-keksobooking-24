@@ -1,4 +1,4 @@
-import {getRandomInt} from './util.js';
+import {getRandomInt, getRandomFloat} from './util.js';
 
 let authorCounter = 1;
 function getAuthor() {
@@ -30,7 +30,10 @@ function getTime() {
 export{getTime};
 
 function getFeatures() {
-  const feature = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+  const feature = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
   const random = getRandomInt(1, feature.length);
   return feature.slice(0, random);
 }
@@ -48,3 +51,28 @@ function getPhotos() {
 }
 
 export{getPhotos};
+
+function generateRecord() {
+  return {
+    author: getAuthor(),
+    offer: {
+      title: 'Заголовок предложения',
+      address: '{{location.lat}}, {{location.lng}}',
+      price: getRandomInt(100, 10000),
+      type: getType(),
+      rooms: getRandomInt(1, 5),
+      guests: getRandomInt(1, 10),
+      checkin: getTime(),
+      checkout: getTime(),
+      features: getFeatures(),
+      description: 'Описание помещений',
+      photos: getPhotos(),
+    },
+    location: {
+      lat: getRandomFloat(35.65000, 35.70000, 5),
+      lng: getRandomFloat(139.70000, 139.80000, 5),
+    },
+  };
+}
+
+export {generateRecord};

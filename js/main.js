@@ -1,29 +1,8 @@
-import {getRandomInt, getRandomFloat} from './util.js';
-import {getAuthor, getType, getTime, getFeatures, getPhotos} from './data.js';
-import  {translate} from './translate.js';
+import {generateRecord} from './data.js';
+import {translate} from './translate.js';
+import {setActiveState} from './form-status.js';
 
-function generateRecord() {
-  return {
-    author: getAuthor(),
-    offer: {
-      title: 'Заголовок предложения',
-      address: '{{location.lat}}, {{location.lng}}',
-      price: getRandomInt(1000, 10000),
-      type: getType(),
-      rooms: getRandomInt(1, 5),
-      guests: getRandomInt(1, 10),
-      checkin: getTime(),
-      checkout: getTime(),
-      features: getFeatures(),
-      description: 'Описание помещений',
-      photos: getPhotos(),
-    },
-    location: {
-      lat: getRandomFloat(35.65000, 35.70000, 5),
-      lng: getRandomFloat(139.70000, 139.80000, 5),
-    },
-  };
-}
+setActiveState();
 
 // eslint-disable-next-line no-unused-vars
 function getData(numberOfRows = 10) {
@@ -38,23 +17,58 @@ function getData(numberOfRows = 10) {
 }
 
 function  formatAd(tpl, ads) {
-  tpl.querySelector('.popup__text--address').textContent = ads.offer.address;
-  tpl.querySelector('.popup__title').textContent = ads.offer.title;
-  tpl.querySelector('.popup__text--price').textContent = `${ads.offer.price} ₽/ночь`;
-  tpl.querySelector('.popup__type').textContent = translate(ads.offer.type);
-  tpl.querySelector('.popup__text--capacity').textContent = `${ads.offer.rooms} комнаты для ${ads.offer.guests} гостей`;
-  tpl.querySelector('.popup__text--time').textContent = `Заезд после ${ads.offer.checkin}, выезд до ${ads.offer.checkout}`;
-  tpl.querySelector('.popup__features').textContent = ads.offer.features;
-  const deskscriptionElement = tpl.querySelector('.popup__description')
-  if (ads.offer.description.length){
-    deskscriptionElement.textContent = ads.offer.description;
+  const addressElement = tpl.querySelector('.popup__text--address');
+  if (ads.offer.address.length === 0){
+    addressElement.classList.add('hidden');
+  } else{
+    addressElement.textContent = ads.offer.address;
+  }
+  const titleElement = tpl.querySelector('.popup__title');
+  if (ads.offer.title.length === 0){
+    titleElement.classList.add('hidden');
   } else {
-    deskscriptionElement.classList.add('hidden');
+    titleElement.textContent = ads.offer.title;
+  }
+  const priceElement = tpl.querySelector('.popup__text--price');
+  if (ads.offer.price.length === 0){
+    priceElement.classList.add('hidden');
+  } else {
+    priceElement.textContent = `${ads.offer.price} ₽/ночь`;
+  }
+  const typeElement = tpl.querySelector('.popup__type');
+  if(ads.offer.type.length === 0){
+    typeElement.classList.add('hidden');
+  } else {
+    typeElement.textContent = translate(ads.offer.type);
+  }
+  const capacityElement = tpl.querySelector('.popup__text--capacity');
+  if (ads.offer.rooms.length === 0 || ads.offer.guests.length === 0) {
+    capacityElement.classList.add('hidden');
+  } else {
+    capacityElement.textContent = `${ads.offer.rooms} комнаты для ${ads.offer.guests} гостей`;
+  }
+  const timeElement = tpl.querySelector('.popup__text--time');
+  if (ads.offer.checkin.length === 0 || ads.offer.checkout.length === 0){
+    timeElement.classList.add('hidden');
+  } else {
+    timeElement.textContent = `Заезд после ${ads.offer.checkin}, выезд до ${ads.offer.checkout}`;
   }
 
+  const deskscriptionElement = tpl.querySelector('.popup__description');
+  if (ads.offer.description.length === 0){
+    deskscriptionElement.classList.add('hidden');
+  } else {
+    deskscriptionElement.textContent = ads.offer.description;
+  }
 
-  tpl.querySelector('.popup__features').textContent = ads.offer.features;
 }
+const formatFeatures = function (tpl, features){
+  const popupFeatures = tpl.querySelector('.popup__features');
+  const featuresElement = features.map((element) =>
+    `<li class='popup__feature popup__feature--${element}'>${element}</li>`,
+  ).join('');
+  popupFeatures.innerHTML = featuresElement;
+};
 
 function formatPhotos(tpl, photos){
   const popupPhotos = tpl.querySelector('.popup__photos');
@@ -79,6 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
   formatAd(tpl, ads);
   formatPhotos(tpl, ads.offer.photos);
   formatAvatar(tpl, ads.author.avatar);
+  formatFeatures(tpl, ads.offer.features);
   mapDiv.appendChild(tpl);
 }, false);
-
