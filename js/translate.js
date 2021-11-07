@@ -3,11 +3,11 @@ const vocabulary ={
   'bungalow': 'Бунгало',
   'house': 'Дом',
   'palace': 'Дворец',
-  'hotel': 'Отель'
+  'hotel': 'Отель',
 };
 
 function translate(word) {
-  return vocabulary[word] ? vocabulary[word] : word
+  return vocabulary[word] ? vocabulary[word] : word;
 
 }
 
